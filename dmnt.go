@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -50,7 +51,11 @@ func remappedFile(original, path string) string {
 }
 
 // ComputeMount determines the correct docker flag to use for a given path
-func ComputeMount(path string) string {
+func ComputeMount(src string) string {
+	path, err := filepath.Abs(src)
+	if err != nil {
+		log.Fatalf("Unable to make path from %q: %s", src, err)
+	}
 	cid := ContainerID()
 	if cid == "" {
 		return standardVolume(path)
