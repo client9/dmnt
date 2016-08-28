@@ -30,7 +30,7 @@ type Container struct {
 // ContainerID attempts to determine the container id of the running
 func ContainerID() string {
 	// docker sets the hostname to 12 character hex string
-	cid := s.Getenv("HOSTNAME")
+	cid := os.Getenv("HOSTNAME")
 	if len(cid) != 12 {
 		return ""
 	}
