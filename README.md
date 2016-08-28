@@ -1,33 +1,48 @@
-# dmount - mount volumes on sibling container
+# dmnt - mount host volumes on sibling containers in Docker
 
 
-* "-v" maps host files to a container
-* "--volumes-from" maps a data volume to a container
+* `-v` maps host files to a container
+* `--volumes-from` maps a data volume to a container
 
 What if you don't know which one to use?  `dmnt` fixes this in a generic way.
 
+```
 docker --rm -it \
-  $(dmnt /usr/local/work/project) \
+  $(dmnt /usr/local/work/project /root/.vimrc) \
   container  ls -l
+```
 
 For host-to-container it will expand to:
 ```
 docker --rm -it \
   -v /usr/local/work/project:/usr/local/work/project \
+  -v /root/.vimrc:/root/.vimrc \
   container ls -l
 ```
 
-for data volume to container it will expand to:
+for data-volume to container or if a file is mapped twice, it will expand to:
+
 ```
 docker --rm -it \
   -v 7878dedbeaef37627838276386283648234:/usr/local/work \
+  -v /Users/nickg/.vimrc:/root/.vimrc \
   container ls -l
 ```
 
-(or whatever the volume name is)
+(or whatever the volume name is).  
 
+For more details jump down to [problem details](#problem)
 
-## The Problem
+## Install
+
+## Known Issues
+
+* Likely doesn't work with files or paths with spaces in them
+* Doesn't handle the case of overlapping or duplicated volumes. Easy to solve,
+  just lazy
+
+<a name="problem"></a>
+## The Problem in Detail
 
 ### Good: host to container
 

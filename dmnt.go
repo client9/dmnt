@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// Mount represents a single mount point
 type Mount struct {
 	Name        string
 	Source      string
@@ -20,35 +21,46 @@ type Mount struct {
 	Propagation string
 }
 
+// Container is a truncated representation of a Container
+// (just need mount points, not everything else)
 type Container struct {
 	Mounts []Mount
 }
 
+// ContainerID attempts to determine the container id of the running
 func ContainerID() string {
-	return os.Getenv("HOSTNAME")
+	// docker sets the hostname to 12 character hex string
+	cid := s.Getenv("HOSTNAME")
+	if len(cid) != 12 {
+		return ""
+	}
+	return cid
 }
 
-func StandardVolume(path string) string {
+func standardVolume(path string) string {
 	return fmt.Sprintf("-v %s:%s", path, path)
 }
 
-func DataVolume(name, path string) string {
+func dataVolume(name, path string) string {
 	return fmt.Sprintf("-v %s:%s", name, path)
 }
 
-func RemappedFile(original, path string) string {
+func remappedFile(original, path string) string {
 	return fmt.Sprintf("-v %s:%s", original, path)
 }
 
+// ComputeMount determines the correct docker flag to use for a given path
 func ComputeMount(path string) string {
 	cid := ContainerID()
 	if cid == "" {
-		return StandardVolume(path)
+		return standardVolume(path)
 	}
 	cmd := exec.Command("docker", "inspect", cid)
 	raw, err := cmd.Output()
 	if err != nil {
-		return StandardVolume(path)
+		// error is ok here, docker might not be running
+		// or docker might not be able to connect to socket
+		return standardVolume(path)
 	}
 	containers := []Container{}
 	err = json.Unmarshal(raw, &containers)
@@ -65,18 +77,18 @@ func ComputeMount(path string) string {
 			// need to add condition?  mnt.Driver == "local"
 			// TODO: check that it's hex
 			if len(mnt.Name) == 64 {
-				return DataVolume(mnt.Name, mnt.Destination)
+				return dataVolume(mnt.Name, mnt.Destination)
 			}
 
 			// -v /host/file:/new/file
 			// -v /new/file:/other/dest
 			// ==> -v /host/file:/other/dest
 			if len(mnt.Name) == 0 {
-				return RemappedFile(mnt.Source, path)
+				return remappedFile(mnt.Source, path)
 			}
 		}
 	}
-	return StandardVolume(path)
+	return standardVolume(path)
 }
 
 func main() {
