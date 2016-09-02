@@ -1,10 +1,15 @@
 # dmnt - mount host volumes on sibling containers in Docker
 
+This allows a common command to use a docker container without caring if the
+user is on a host or they are inside a docker container already.  Perhaps
+your CI system is running in a docker container and uses docker, and your
+developers use their Mac and docker directly.  If they want mount a directory
+they have a choice of using:
 
 * `-v` maps host files to a container
 * `--volumes-from` maps a data volume to a container
 
-What if you don't know which one to use?  `dmnt` fixes this in a generic way.
+`dmnt` figure out the which one to use.  For instance given:
 
 ```
 docker --rm -it \
@@ -35,6 +40,12 @@ For more details jump down to [problem details](#problem)
 
 ## Install
 
+```
+go get -u github.com/client9/dmnt
+```
+
+Do you want standalone binaries?  let me know!
+
 ## Known Issues
 
 * Likely doesn't work with files or paths with spaces in them
@@ -43,6 +54,10 @@ For more details jump down to [problem details](#problem)
 
 <a name="problem"></a>
 ## The Problem in Detail
+
+The problem occurs when trying to run or use a docker container and mounting
+directories.  The comm
+
 
 ### Good: host to container
 
@@ -59,7 +74,8 @@ docker --rm -it \
 ### Good: data volume to container
 
 Now let's say I don't want to mess up my laptop (or server) with a bunch of
-work stuff, and I so I want to keep everything in a [data volume]().
+work stuff, and I so I want to keep everything in a [data
+volume](https://docs.docker.com/engine/tutorials/dockervolumes/).
 
 ```bash
 docker create -v /usr/local/work --name workspace alpine /bin/true
@@ -74,7 +90,7 @@ docker --rm -it \
  my-dev-env ls -l
 ```
 
-Once I'm inside the container, everything I do in /usr/local/work will
+Once I'm inside the container, everything I do in `/usr/local/work` will
 be saved but the host is left untouched.  Basically I never need to use
 `homebrew` or anything else.  My dev environment is 100% in docker.
 
@@ -136,7 +152,7 @@ if `/usr/local/work/newproject` is mounted on the host or is a data volume?
 In general should you use:
 
 ```
--v /usr/local/work/newproject:/usr/local/newproject
+-v /usr/local/work/newproject:/usr/local/work/newproject
 ```
 
 or
