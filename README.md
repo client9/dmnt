@@ -176,3 +176,9 @@ The algorihm is the following:
 
 Enjoy!
 
+## Final
+
+* The terminology is tricky here.  Help welcome on making this more clear.
+* `dmnt` is short for "docker mount"
+* `dmnt` may also standard for "dammit"
+
