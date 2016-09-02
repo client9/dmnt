@@ -178,7 +178,8 @@ Enjoy!
 
 ## Final
 
+* Am I the only one with the problem?
 * The terminology is tricky here.  Help welcome on making this more clear.
 * `dmnt` is short for "docker mount"
-* `dmnt` may also standard for "dammit"
+* `dmnt` may also stand for "dammit"
 
