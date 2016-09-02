@@ -9,7 +9,7 @@ they have a choice of using:
 * `-v` maps host files to a container
 * `--volumes-from` maps a data volume to a container
 
-`dmnt` figure out the which one to use.  For instance given:
+`dmnt` figures out the which one to use.  For instance given:
 
 ```
 docker --rm -it \
