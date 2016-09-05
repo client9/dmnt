@@ -41,7 +41,7 @@ For more details jump down to [problem details](#problem)
 ## Install
 
 ```
-go get -u github.com/client9/dmnt
+go get -u github.com/client9/dmnt/...
 ```
 
 Do you want standalone binaries?  let me know!

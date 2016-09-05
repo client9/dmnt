@@ -1,8 +1,7 @@
-package main
+package dmt
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -39,15 +38,15 @@ func ContainerID() string {
 }
 
 func standardVolume(path string) string {
-	return fmt.Sprintf("-v %s:%s", path, path)
+	return fmt.Sprintf("%s:%s", path, path)
 }
 
 func dataVolume(name, path string) string {
-	return fmt.Sprintf("-v %s:%s", name, path)
+	return fmt.Sprintf("%s:%s", name, path)
 }
 
 func remappedFile(original, path string) string {
-	return fmt.Sprintf("-v %s:%s", original, path)
+	return fmt.Sprintf("%s:%s", original, path)
 }
 
 // ComputeMount determines the correct docker flag to use for a given path
@@ -94,17 +93,4 @@ func ComputeMount(src string) string {
 		}
 	}
 	return standardVolume(path)
-}
-
-func main() {
-	flag.Parse()
-	args := flag.Args()
-	if len(args) == 0 {
-		log.Fatalf("Expected at least one arg")
-	}
-	outflags := make([]string, 0, len(args))
-	for _, path := range args {
-		outflags = append(outflags, ComputeMount(path))
-	}
-	fmt.Println(strings.Join(outflags, " "))
 }
