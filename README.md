@@ -1,5 +1,7 @@
 # dmnt - mount host volumes on sibling containers in Docker
 
+Docker Forum: https://forums.docker.com/t/better-support-for-volume-sharing-with-sibling-containers/30198
+
 This allows a common command to use a docker container without caring if the
 user is on a host or they are inside a docker container already.  Perhaps
 your CI system is running in a docker container and uses docker, and your
