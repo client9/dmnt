@@ -94,14 +94,13 @@ Once I'm inside the container, everything I do in `/usr/local/work` will
 be saved but the host is left untouched.  Basically I never need to use
 `homebrew` or anything else.  My dev environment is 100% in docker.
 
-### Good: Using Docker with in Docker
+### Good: Sibling Containers (not exactly Docker with in Docker)
 
 Now your development environment is in docker.   Since you have now completely 
 drank the k00l-aid, you'll want to run or build containers inside docker.
 
 This is not "docker in docker", but generated or run new contains _in
-parallel_ to the container you have. [jpetazzo calls this a sibling container](
-(http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)
+parallel_ to the container you have. [jpetazzo calls this a sibling container](http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)
 It's very nice. 
 
 1. mount `/var/run/docker.sock`
